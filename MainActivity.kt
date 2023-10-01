@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
         val context=this
         val db=DatabaseHelper(context)
+
+
         binding.btnkaydet.setOnClickListener{
             var etadsoyad=binding.etadsoyad.text.toString()
             var etyas=binding.etyas.text.toString()
@@ -34,7 +36,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnoku.setOnClickListener{
+            var data=db.readData()
+            binding.txtsonuc.text=""
+            for (i in 0 until data.size){
 
+                binding.txtsonuc.append(data.get(i).id.toString()+" "+data.get(i).adSoyad+" "+
+                data.get(i).yas+" \n")
+
+            }
+        }
 
         }
 
