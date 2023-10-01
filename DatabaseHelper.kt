@@ -1,5 +1,6 @@
 package com.example.localdatabase
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -18,10 +19,10 @@ database_name,null,1) {
 
     override fun onCreate(db: SQLiteDatabase?) {
 
-        var createTable=" CREATE TABLE "+ table_name+"("+
-                col_id+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                col_name+" VARCHAR(256), "+
-                col_yas+" INTEGER )"
+        var createTable = " CREATE TABLE " + table_name + "(" +
+                col_id + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                col_name + " VARCHAR(256), " +
+                col_yas + " INTEGER )"
         db?.execSQL(createTable)
     }
 
@@ -44,6 +45,28 @@ database_name,null,1) {
         }
     }
 
+    @SuppressLint("Range")
+    fun readData(): MutableList<Kullanici> {
+        val liste: MutableList<Kullanici> = mutableListOf()
+        val db = this.readableDatabase
+        val sorgu = "SELECT * FROM $table_name"
+        val sonuc = db.rawQuery(sorgu, null)
+
+        if (sonuc.moveToFirst()) {
+            do {
+                val kullanici = Kullanici()
+                kullanici.id = sonuc.getInt(sonuc.getColumnIndex(col_id))
+                kullanici.adSoyad = sonuc.getString(sonuc.getColumnIndex(col_name))
+                kullanici.yas = sonuc.getInt(sonuc.getColumnIndex(col_yas))
+                liste.add(kullanici)
+            } while (sonuc.moveToNext())
+        }
+        sonuc.close()
+        db.close()
+        return liste
+    }
+
+ 
 
 
 }
